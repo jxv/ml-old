@@ -2,29 +2,29 @@
 #include <math.h>
 #include "ml.h"
 
-#define DEF_POINT(B,TY,ABS,SQRT,EPSILON)	\
+#define DEF_POINT(A,TY,ABS,SQRT,EPSILON)	\
 	inline	\
-	TY mlAbs##B(const TY x) {	\
+	TY mlAbs##A(const TY x) {	\
 		return ABS(x);	\
 	}	\
 	\
 	inline	\
-	TY mlSqrt##B(const TY x) {	\
+	TY mlSqrt##A(const TY x) {	\
 		return SQRT(x);	\
 	}	\
 	\
 	inline	\
-	TY mlRecip##B(const TY x) {	\
-		return mlNearZero##B(x) ? 0 : (1 / x);	\
+	TY mlRecip##A(const TY x) {	\
+		return mlNearZero##A(x) ? 0 : (1 / x);	\
 	}	\
 	\
 	inline	\
-	bool mlNearZero##B(const TY x) {	\
-		return mlAbs##B(x) <= EPSILON;	\
+	bool mlNearZero##A(const TY x) {	\
+		return mlAbs##A(x) <= EPSILON;	\
 	}	\
 	\
 	inline	\
-	TY mlClamp##B(const TY low, const TY hi, const TY val) {	\
+	TY mlClamp##A(const TY low, const TY hi, const TY val) {	\
 		if (low >= val)	return low;	\
 		if (hi <= val)	return hi;	\
 		return val;	\
@@ -35,77 +35,107 @@ DEF_POINT(i,int,abs,sqrtl,0)
 DEF_POINT(f,float,fabsf,sqrtf,0.0000001)
 DEF_POINT(d,double,fabs,sqrt,0.0000001)
 
-#define DEF_V2(A,B,TY)	\
+#define DEF_V2(A,TY)	\
 	inline	\
-	ML_V2##A mlV2##B(const TY x, const TY y) {	\
-		return (ML_V2##A) { .x = x, .y = y };	\
+	MLV2##A mlV2##A(const TY x, const TY y) {	\
+		return (MLV2##A) { .x = x, .y = y };	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlV2##B##Pnt(const TY x) {	\
-		return (ML_V2##A) { .x = x, .y = x };	\
+	MLV2##A mlV2##A##Point(const TY x) {	\
+		return (MLV2##A) { .x = x, .y = x };	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlAbsV2##B(const ML_V2##A x) {	\
-		return mlV2##B(mlAbs##B(x.x), mlAbs##B(x.y));	\
+	MLV2##A mlV2##A##Zero() {	\
+		return mlV2##A(0,0);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlAddV2##B##V2##B(const ML_V2##A x, const ML_V2##A y) {	\
-		return mlV2##B(x.x + y.x, x.y + y.y);	\
+	MLV2##A mlV2##A##One() {	\
+		return mlV2##A(1,1);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlSubV2##B##V2##B(const ML_V2##A x, const ML_V2##A y) {	\
-		return mlV2##B(x.x - y.x, x.y - y.y);	\
+	MLV2##A mlAbsV2##A(const MLV2##A x) {	\
+		return mlV2##A(mlAbs##A(x.x), mlAbs##A(x.y));	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlMulV2##B##V2##B(const ML_V2##A x, const ML_V2##A y) {	\
-		return mlV2##B(x.x * y.x, x.y * y.y);	\
+	MLV2##A mlAddV2##A(const MLV2##A x, const MLV2##A y) {	\
+		return mlV2##A(x.x + y.x, x.y + y.y);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlDivV2##B##V2##B(const ML_V2##A x, const ML_V2##A y) {	\
-		return mlV2##B(x.x / y.x, x.y / y.y);	\
+	MLV2##A mlSubV2##A(const MLV2##A x, const MLV2##A y) {	\
+		return mlV2##A(x.x - y.x, x.y - y.y);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlAddV2##B##B(const ML_V2##A x, const TY y) {	\
-		return mlV2##B(x.x + y, x.y + y);	\
+	MLV2##A mlMulV2##A(const MLV2##A x, const MLV2##A y) {	\
+		return mlV2##A(x.x * y.x, x.y * y.y);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlSubV2##B##B(const ML_V2##A x, const TY y) {	\
-		return mlV2##B(x.x - y, x.y - y);	\
+	MLV2##A mlDivV2##A(const MLV2##A x, const MLV2##A y) {	\
+		return mlV2##A(x.x / y.x, x.y / y.y);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlMulV2##B##B(const ML_V2##A x, const TY y) {	\
-		return mlV2##B(x.x * y, x.y * y);	\
+	MLV2##A mlAddV2##A##A(const MLV2##A x, const TY y) {	\
+		return mlV2##A(x.x + y, x.y + y);	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlDivV2##B##B(const ML_V2##A x, const TY y) {	\
-		return mlV2##B(x.x / y, x.y / y);	\
+	MLV2##A mlSubV2##A##A(const MLV2##A x, const TY y) {	\
+		return mlV2##A(x.x - y, x.y - y);	\
 	}	\
 	\
 	inline	\
-	TY mlSqLenV2##B(const ML_V2##A x) {	\
+	MLV2##A mlMulV2##A##A(const MLV2##A x, const TY y) {	\
+		return mlV2##A(x.x * y, x.y * y);	\
+	}	\
+	\
+	inline	\
+	MLV2##A mlDivV2##A##A(const MLV2##A x, const TY y) {	\
+		return mlV2##A(x.x / y, x.y / y);	\
+	}	\
+	\
+	inline	\
+	TY mlSqLenV2##A(const MLV2##A x) {	\
 		return x.x * x.x + x.y * x.y;	\
 	}	\
 	\
 	inline	\
-	TY mlLenV2##B(const ML_V2##A x) {	\
-		return mlSqrt##B(mlSqLenV2##B(x));	\
+	TY mlLenV2##A(const MLV2##A x) {	\
+		return mlSqrt##A(mlSqLenV2##A(x));	\
 	}	\
 	\
 	inline	\
-	ML_V2##A mlClampV2##B(const ML_V2##A low, const ML_V2##A hi, const ML_V2##A x) {	\
-		return mlV2##B(mlClamp##B(low.x, hi.x, x.x), mlClamp##B(low.y, hi.y, x.y));	\
+	TY mlDotV2##A(const MLV2##A x, const MLV2##A y) {	\
+		return x.x * y.x + x.y * y.y;	\
+	}	\
+	\
+	inline	\
+	MLV2##A mlNormalizeV2##A(const MLV2##A x) {	\
+		/* TODO */	\
+		if (mlNearZeroV2##A(x)) {	\
+			return x;	\
+		} else {	\
+			return x;	\
+		}	\
+	}	\
+	\
+	inline	\
+	MLV2##A mlClampV2##A(const MLV2##A low, const MLV2##A hi, const MLV2##A x) {	\
+		return mlV2##A(mlClamp##A(low.x, hi.x, x.x), mlClamp##A(low.y, hi.y, x.y));	\
+	}	\
+	\
+	inline	\
+	bool mlNearZeroV2##A(const MLV2##A x)	{	\
+		return mlNearZero##A(x.x) && mlNearZero##A(x.y);	\
 	}
 
-DEF_V2(I,i,int)
-DEF_V2(F,f,float)
-DEF_V2(D,d,double)
+DEF_V2(i,int)
+DEF_V2(f,float)
+DEF_V2(d,double)

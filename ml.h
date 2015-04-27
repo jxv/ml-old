@@ -3,18 +3,18 @@
 
 #include <stdbool.h>
 
-#define DECL_POINT(B,TY)	\
-	TY mlAbs##B(const TY x);	\
-	TY mlSqrt##B(const TY x);	\
-	TY mlRecip##B(const TY x);	\
-	bool mlNearZero##B(const TY x);	\
-	TY mlClamp##B(const TY low, const TY hi, const TY x);
+#define DECL_POINT(A,TY)	\
+	TY mlAbs##A(const TY x);	\
+	TY mlSqrt##A(const TY x);	\
+	TY mlRecip##A(const TY x);	\
+	bool mlNearZero##A(const TY x);	\
+	TY mlClamp##A(const TY low, const TY hi, const TY x);
 
 DECL_POINT(i,int)
 DECL_POINT(f,float)
 DECL_POINT(d,double)
 
-#define DECL_V2(A,B,TY)	\
+#define DECL_V2(A,TY)	\
 	typedef struct {	\
 		union {	\
 			struct {	\
@@ -23,25 +23,30 @@ DECL_POINT(d,double)
 			};	\
 			TY v[2];	\
 		};	\
-	} ML_V2##A;	\
+	} MLV2##A;	\
 	\
-	ML_V2##A mlV2##B(const TY x, const TY y);	\
-	ML_V2##A mlV2##B##Point(const TY x);	\
-	ML_V2##A mlAbsV2##B(const ML_V2##A x);	\
-	ML_V2##A mlAddV2##B##V2##B(const ML_V2##A x, const ML_V2##A y);	\
-	ML_V2##A mlSubV2##B##V2##B(const ML_V2##A x, const ML_V2##A y);	\
-	ML_V2##A mlMulV2##B##V2##B(const ML_V2##A x, const ML_V2##A y);	\
-	ML_V2##A mlDivV2##B##V2##B(const ML_V2##A x, const ML_V2##A y);	\
-	ML_V2##A mlAddV2##B##B(const ML_V2##A x, const TY y);	\
-	ML_V2##A mlSubV2##B##B(const ML_V2##A x, const TY y);	\
-	ML_V2##A mlMulV2##B##B(const ML_V2##A x, const TY y);	\
-	ML_V2##A mlDivV2##B##B(const ML_V2##A x, const TY y);	\
-	TY mlSqLenV2##B(const ML_V2##A x);	\
-	TY mlLenV2##B(const ML_V2##A x);	\
-	ML_V2##A mlClampV2##B(const ML_V2##A low, const ML_V2##A hi, const ML_V2##A x);
+	MLV2##A mlV2##A(const TY x, const TY y);	\
+	MLV2##A mlV2##A##Point(const TY x);	\
+	MLV2##A mlV2##A##Zero();	\
+	MLV2##A mlV2##A##One();	\
+	MLV2##A mlAbsV2##A(const MLV2##A x);	\
+	MLV2##A mlAddV2##A(const MLV2##A x, const MLV2##A y);	\
+	MLV2##A mlSubV2##A(const MLV2##A x, const MLV2##A y);	\
+	MLV2##A mlMulV2##A(const MLV2##A x, const MLV2##A y);	\
+	MLV2##A mlDivV2##A(const MLV2##A x, const MLV2##A y);	\
+	MLV2##A mlAddV2##A##A(const MLV2##A x, const TY y);	\
+	MLV2##A mlSubV2##A##A(const MLV2##A x, const TY y);	\
+	MLV2##A mlMulV2##A##A(const MLV2##A x, const TY y);	\
+	MLV2##A mlDivV2##A##A(const MLV2##A x, const TY y);	\
+	TY mlSqLenV2##A(const MLV2##A x);	\
+	TY mlLenV2##A(const MLV2##A x);	\
+	TY mlDotV2##A(const MLV2##A x, const MLV2##A y);	\
+	MLV2##A mlNormalizeV2##A(const MLV2##A x);	\
+	MLV2##A mlClampV2##A(const MLV2##A low, const MLV2##A hi, const MLV2##A x);	\
+	bool mlNearZeroV2##A(const MLV2##A x);
 
-DECL_V2(I,i,int)
-DECL_V2(F,f,float)
-DECL_V2(D,d,double)
+DECL_V2(i,int)
+DECL_V2(f,float)
+DECL_V2(d,double)
 
 #endif
