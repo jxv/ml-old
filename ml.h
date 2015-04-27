@@ -6,6 +6,7 @@
 #define DECL_POINT(B,TY)	\
 	TY mlAbs##B(const TY x);	\
 	TY mlSqrt##B(const TY x);	\
+	TY mlRecip##B(const TY x);	\
 	bool mlNearZero##B(const TY x);	\
 	TY mlClamp##B(const TY low, const TY hi, const TY x);
 

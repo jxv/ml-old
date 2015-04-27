@@ -11,6 +11,10 @@
 		return SQRT(x);	\
 	}	\
 	\
+	TY mlRecip##B(const TY x) {	\
+		return mlNearZero##B(x) ? 0 : (1 / x);	\
+	}	\
+	\
 	bool mlNearZero##B(const TY x) {	\
 		return mlAbs##B(x) <= EPSILON;	\
 	}	\
