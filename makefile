@@ -1,5 +1,5 @@
 all:
-	gcc ml.c -c -o ml.o -std=c11 -ffast-math -g -O2 -lc -lm
+	gcc ml.c -c -o ml.o -Wall -Werror -pedantic -std=c11 -ffast-math -g -O2 -lc -lm
 	ar rvs libml.a ml.o
 clean:
 	rm ml.o	libml.a
