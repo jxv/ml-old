@@ -3,6 +3,12 @@
 
 #include <stdbool.h>
 
+#define DECL_RAWCAST(A,TYA,B,TYB)	\
+TYB mlRawCast##A##B(TYA x);
+
+DECL_RAWCAST(f,float,i,int)
+DECL_RAWCAST(i,int,f,float)
+
 #define DECL_PRIM(A,TY)	\
 TY mlPiDiv4##A();	\
 TY mlPiDiv2##A();	\
@@ -18,6 +24,7 @@ TY mlRound##A(TY x);	\
 TY mlFloor##A(TY x);	\
 TY mlCeil##A(TY x);	\
 TY mlMod##A(TY x, TY y);	\
+TY mlPow##A(TY x, TY y);	\
 bool mlNearZero##A(TY x);	\
 \
 TY mlMin##A(TY x, TY y);	\
@@ -40,7 +47,7 @@ TY mlBiCosInterp##A(TY tl, TY tr, TY bl, TY br, TY sx, TY sy);	\
 TY mlBiSmoothStepInterp##A(TY tl, TY tr, TY bl, TY br, TY sx, TY sy);	\
 TY mlBiSmootherstepInterp##A(TY tl, TY tr, TY bl, TY br, TY sx, TY sy);
 
-DECL_PRIM(i,int)
+// DECL_PRIM(i,int)
 DECL_PRIM(f,float)
 DECL_PRIM(d,double)
 
@@ -71,22 +78,28 @@ MLV2##A mlAddV2##A(MLV2##A x, MLV2##A y);	\
 MLV2##A mlSubV2##A(MLV2##A x, MLV2##A y);	\
 MLV2##A mlMulV2##A(MLV2##A x, MLV2##A y);	\
 MLV2##A mlDivV2##A(MLV2##A x, MLV2##A y);	\
+MLV2##A mlPowV2##A(MLV2##A x, MLV2##A y);	\
 \
 MLV2##A mlAddV2##A##A(MLV2##A x, TY y);	\
 MLV2##A mlSubV2##A##A(MLV2##A x, TY y);	\
 MLV2##A mlMulV2##A##A(MLV2##A x, TY y);	\
 MLV2##A mlDivV2##A##A(MLV2##A x, TY y);	\
+MLV2##A mlPowV2##A##A(MLV2##A x, TY y);	\
 \
 MLV2##A mlClampV2##A(MLV2##A low, MLV2##A hi, MLV2##A x);	\
+bool mlNearZeroV2##A(MLV2##A x);	\
+bool mlEqualV2##A(MLV2##A x, MLV2##A y);	\
 \
 TY mlSqLenV2##A(MLV2##A x);	\
 TY mlLenV2##A(MLV2##A x);	\
+TY mlSqDistV2##A(MLV2##A x, MLV2##A y);	\
+TY mlDistV2##A(MLV2##A x, MLV2##A y);	\
+TY mlManhattanDistV2##A(MLV2##A x, MLV2##A y);	\
 TY mlDotV2##A(MLV2##A x, MLV2##A y);	\
 MLV2##A mlNormalizeV2##A(MLV2##A x);	\
-\
-bool mlNearZeroV2##A(MLV2##A x);
+MLV2##A mlReflectV2##A(MLV2##A x, MLV2##A y);	\
 
-DECL_V2(i,int)
+// DECL_V2(i,int)
 DECL_V2(f,float)
 DECL_V2(d,double)
 

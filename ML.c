@@ -2,7 +2,20 @@
 #include <math.h>
 #include "ML.h"
 
-#define DEF_PRIM(A,TY,ABS,SQRT,ROUND,FLOOR,CEIL,MOD,SIN,COS,EPSILON)	\
+#define DEF_RAWCAST(A,TYA,B,TYB)	\
+TYB mlRawCast##A##B(TYA x) {	\
+	union {	\
+		TYA a;	\
+		TYB b;	\
+	} v;	\
+	v.a = x;	\
+	return v.b;	\
+}
+
+DEF_RAWCAST(f,float,i,int)
+DEF_RAWCAST(i,int,f,float)
+
+#define DEF_PRIM(A,TY,ABS,SQRT,ROUND,FLOOR,CEIL,MOD,POW,SIN,COS,EPSILON)	\
 inline	\
 TY mlPiDiv4##A() {	\
 	return M_PI_4;	\
@@ -67,6 +80,11 @@ TY mlCeil##A(TY x) {	\
 inline	\
 TY mlMod##A(TY x, TY y) {	\
 	return MOD(x,y);	\
+}	\
+\
+inline	\
+TY mlPow##A(TY x, TY y) {	\
+	return POW(x,y);	\
 }	\
 \
 inline	\
@@ -191,11 +209,11 @@ TY local_mlMod##A(TY x, TY y) {	\
 	return x % y;	\
 }
 
-DEF_MOD_FN(i,int)
+// DEF_MOD_FN(i,int)
 
-DEF_PRIM(i,int,abs,sqrtl,/*round*/,/*floor*/,/*ceil*/,local_mlModi,sin,cos,0)
-DEF_PRIM(f,float,fabsf,sqrtf,roundf,floorf,ceilf,fmodf,sinf,cosf,1e-6)
-DEF_PRIM(d,double,fabs,sqrt,round,floor,ceil,fmod,sin,cos,1e-6)
+// DEF_PRIM(i,int,abs,sqrtl,/*round*/,/*floor*/,/*ceil*/,local_mlModi,powl,sin,cos,0)
+DEF_PRIM(f,float,fabsf,sqrtf,roundf,floorf,ceilf,fmodf,powf,sinf,cosf,1e-6)
+DEF_PRIM(d,double,fabs,sqrt,round,floor,ceil,fmod,pow,sin,cos,1e-6)
 
 #define DEF_V2(A,TY)	\
 inline	\
@@ -244,6 +262,12 @@ MLV2##A mlDivV2##A(MLV2##A x, MLV2##A y) {	\
 }	\
 \
 inline	\
+MLV2##A mlPowV2##A(MLV2##A x, MLV2##A y) {	\
+	return mlV2##A(mlPow##A(x.x, y.x), mlPow##A(x.y, y.y));	\
+}	\
+\
+\
+inline	\
 MLV2##A mlAddV2##A##A(MLV2##A x, TY y) {	\
 	return mlV2##A(x.x + y, x.y + y);	\
 }	\
@@ -263,6 +287,23 @@ MLV2##A mlDivV2##A##A(MLV2##A x, TY y) {	\
 	return mlV2##A(x.x / y, x.y / y);	\
 }	\
 \
+\
+inline	\
+MLV2##A mlClampV2##A(MLV2##A low, MLV2##A hi, MLV2##A x) {	\
+	return mlV2##A(mlClamp##A(low.x, hi.x, x.x), mlClamp##A(low.y, hi.y, x.y));	\
+}	\
+\
+inline	\
+bool mlNearZeroV2##A(MLV2##A x)	{	\
+	return mlNearZero##A(x.x) && mlNearZero##A(x.y);	\
+}	\
+\
+inline	\
+bool mlEqualV2##A(MLV2##A x, MLV2##A y) {	\
+	return x.x == y.x && x.y == y.y;	\
+}	\
+\
+\
 inline	\
 TY mlSqLenV2##A(MLV2##A x) {	\
 	return x.x * x.x + x.y * x.y;	\
@@ -274,6 +315,23 @@ TY mlLenV2##A(MLV2##A x) {	\
 }	\
 \
 inline	\
+TY mlSqDistV2##A(MLV2##A x, MLV2##A y) {	\
+	const TY dx = x.x - y.x;	\
+	const TY dy = x.y - y.y;	\
+	return dx * dx + dy * dy;	\
+}	\
+\
+inline	\
+TY mlDistV2##A(MLV2##A x, MLV2##A y) {	\
+	return mlSqrt##A(mlSqDistV2##A(x, y));	\
+}	\
+\
+inline	\
+TY mlManhattanDistV2##A(MLV2##A x, MLV2##A y) {	\
+	return mlAbs##A(x.x - y.x) + mlAbs##A(x.y - y.y);	\
+}	\
+\
+inline	\
 TY mlDotV2##A(MLV2##A x, MLV2##A y) {	\
 	return x.x * y.x + x.y * y.y;	\
 }	\
@@ -281,18 +339,13 @@ TY mlDotV2##A(MLV2##A x, MLV2##A y) {	\
 inline	\
 MLV2##A mlNormalizeV2##A(MLV2##A x) {	\
 	return mlDivV2##A##A(x, mlLenV2##A(x));	\
-}\
-\
-inline	\
-MLV2##A mlClampV2##A(MLV2##A low, MLV2##A hi, MLV2##A x) {	\
-	return mlV2##A(mlClamp##A(low.x, hi.x, x.x), mlClamp##A(low.y, hi.y, x.y));	\
 }	\
 \
 inline	\
-bool mlNearZeroV2##A(MLV2##A x)	{	\
-	return mlNearZero##A(x.x) && mlNearZero##A(x.y);	\
+MLV2##A mlReflectV2##A(MLV2##A x, MLV2##A y) {	\
+	return mlSubV2##A(x, mlMulV2##A##A(y, mlDotV2##A(x, y) * 2));	\
 }
 
-DEF_V2(i,int)
+// DEF_V2(i,int)
 DEF_V2(f,float)
 DEF_V2(d,double)
