@@ -1,8 +1,8 @@
 all:
-	gcc ml.c -c -o ml.o -Wall -Werror -pedantic -std=c11 -ffast-math -g -O2 -lc -lm
-	ar rvs libml.a ml.o
+	gcc ML.c -c -o ML.o -Wall -Werror -pedantic -std=c11 -ffast-math -g -O2 -lc -lm -D_GNU_SOURCE
+	ar rvs libML.a ML.o
 clean:
-	rm ml.o	libml.a
+	rm ML.o	libML.a
 install:
-	cp ml.h /usr/include/
-	cp libml.a /usr/lib/
+	cp ML.h /usr/include/
+	cp libML.a /usr/lib/
