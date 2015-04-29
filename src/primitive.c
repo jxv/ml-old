@@ -79,11 +79,22 @@ inline T mlClamp##A(T low, T hi, T x) {\
 	return x;\
 }
 
+#define ML_DEFINE_PRIMITIVE_ORDER_FN(A,T,MIN,MAX)\
+inline T mlMin##A(T x, T y) {\
+	return MIN(x,y);\
+}\
+inline T mlMax##A(T x, T y) {\
+	return MAX(x,y);\
+}\
+inline T mlClamp##A(T low, T hi, T x) {\
+	return MAX(low,MIN(hi,x));\
+}
+
 ML_DEFINE_PRIMITIVE_ORDER(i,int)
 ML_DEFINE_PRIMITIVE_ORDER(li,long int)
-ML_DEFINE_PRIMITIVE_ORDER(f,float)
-ML_DEFINE_PRIMITIVE_ORDER(d,double)
-ML_DEFINE_PRIMITIVE_ORDER(ld,long double)
+ML_DEFINE_PRIMITIVE_ORDER_FN(f,float,fminf,fmaxf)
+ML_DEFINE_PRIMITIVE_ORDER_FN(d,double,fmin,fmax)
+ML_DEFINE_PRIMITIVE_ORDER_FN(ld,long double,fminl,fmaxl)
 
 #define ML_DEFINE_PRIMITIVE_NEAR_ZERO(A,T,EPSILON)\
 inline bool mlNearZero##A(T x) {\
