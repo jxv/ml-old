@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ML_DECLARE_V2(A,T)	\
 typedef struct {	\
 	union {	\
@@ -119,5 +123,9 @@ ML_DECLARE_M4(li,long int)
 ML_DECLARE_M4(f,float)
 ML_DECLARE_M4(d,double)
 ML_DECLARE_M4(ld,long double)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

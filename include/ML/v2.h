@@ -1,6 +1,10 @@
 #ifndef ML_V2_H
 #define ML_V2_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ML_DECLARE_V2_CTOR(A,T)\
 MLV2##A mlV2##A(T x, T y);\
 MLV2##A mlV2Fill##A(T x);\
@@ -111,5 +115,9 @@ ML_DECLARE_V2_VECTOR(ld,long double)
 
 int mlHashV2f(MLV2f v);
 int mlMixHashV2f(MLV2f v);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

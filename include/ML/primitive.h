@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ML_DECLARE_PRIMITIVE_CTOR(A,T,S)\
 T mlPrimitive##A(S x);
 
@@ -150,5 +154,9 @@ ML_DECLARE_RAW_CAST(f,float,i,int)
 ML_DECLARE_RAW_CAST(i,int,f,float)
 ML_DECLARE_RAW_CAST(d,double,li,long int)
 ML_DECLARE_RAW_CAST(li,long int,d,double)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
