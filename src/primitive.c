@@ -96,14 +96,14 @@ ML_DEFINE_PRIMITIVE_ORDER_FN(f,float,fminf,fmaxf)
 ML_DEFINE_PRIMITIVE_ORDER_FN(d,double,fmin,fmax)
 ML_DEFINE_PRIMITIVE_ORDER_FN(ld,long double,fminl,fmaxl)
 
-#define ML_DEFINE_PRIMITIVE_NEAR_ZERO(A,T,EPSILON)\
+#define ML_DEFINE_PRIMITIVE_NEAR_ZERO(A,T)\
 inline bool mlNearZero##A(T x) {\
-	return mlAbs##A(x) < EPSILON;\
+	return mlAbs##A(x) < mlEpsilon##A();\
 }
 
-ML_DEFINE_PRIMITIVE_NEAR_ZERO(f,float,1e-6)
-ML_DEFINE_PRIMITIVE_NEAR_ZERO(d,double,1e-6)
-ML_DEFINE_PRIMITIVE_NEAR_ZERO(ld,long double,1e-6)
+ML_DEFINE_PRIMITIVE_NEAR_ZERO(f,float)
+ML_DEFINE_PRIMITIVE_NEAR_ZERO(d,double)
+ML_DEFINE_PRIMITIVE_NEAR_ZERO(ld,long double)
 
 #define ML_DEFINE_PRIMITIVE_RECIPORCAL(A,T)\
 inline T mlRecip##A(T x) {\
@@ -133,7 +133,7 @@ ML_DEFINE_PRIMITIVE_MODULUS_FN(f,float,fmodf)
 ML_DEFINE_PRIMITIVE_MODULUS_FN(d,double,fmod)
 ML_DEFINE_PRIMITIVE_MODULUS_FN(ld,long double,fmodl)
 
-#define ML_DEFINE_PRIMITIVE_FLOATING_POINT(A,T,EXP,LOG,SQRT,POW,SIN,COS,TAN,ASIN,ACOS,ATAN,SINH,COSH,TANH,ASINH,ACOSH,ATANH)\
+#define ML_DEFINE_PRIMITIVE_FLOATING_POINT(A,T,EPSILON,EXP,LOG,SQRT,POW,SIN,COS,TAN,ASIN,ACOS,ATAN,SINH,COSH,TANH,ASINH,ACOSH,ATANH)\
 inline T mlPiDiv4##A() {\
 	return 0.78539816339744830962;\
 }\
@@ -155,6 +155,9 @@ inline T mlEuler##A() {\
 inline T mlPhi##A() {\
 	return 1.618033988749895;\
 }\
+inline T mlEpsilon##A() {\
+	return EPSILON;\
+}\
 inline T mlExp##A(T x) {\
 	return EXP(x);\
 }\
@@ -168,7 +171,7 @@ inline T mlPow##A(T x, T y) {\
 	return POW(x,y);\
 }\
 inline T mlLogBase##A(T base, T x) {\
-	return LOG(x) / LOG(base);\
+	return mlDiv##A(LOG(x), LOG(base));\
 }\
 inline T mlSin##A(T x) {\
 	return SIN(x);\
@@ -210,9 +213,9 @@ inline T mlSaturate##A(T x) {\
 	return mlMax##A(mlMin##A(x,1),0);\
 }
 
-ML_DEFINE_PRIMITIVE_FLOATING_POINT(f,float,expf,logf,sqrtf,powf,sinf,cosf,tanf,asinf,acosf,atanf,sinhf,coshf,tanhf,asinhf,acoshf,atanhf)
-ML_DEFINE_PRIMITIVE_FLOATING_POINT(d,double,exp,log,sqrt,pow,sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,asinh,acosh,atanh)
-ML_DEFINE_PRIMITIVE_FLOATING_POINT(ld,long double,expl,logl,sqrtl,powl,sinl,cosl,tanl,asinl,acosl,atanl,sinhl,coshl,tanhl,asinl,acoshl,atanhl)
+ML_DEFINE_PRIMITIVE_FLOATING_POINT(f,float,1e-6,expf,logf,sqrtf,powf,sinf,cosf,tanf,asinf,acosf,atanf,sinhf,coshf,tanhf,asinhf,acoshf,atanhf)
+ML_DEFINE_PRIMITIVE_FLOATING_POINT(d,double,1e-7,exp,log,sqrt,pow,sin,cos,tan,asin,acos,atan,sinh,cosh,tanh,asinh,acosh,atanh)
+ML_DEFINE_PRIMITIVE_FLOATING_POINT(ld,long double,1e-8,expl,logl,sqrtl,powl,sinl,cosl,tanl,asinl,acosl,atanl,sinhl,coshl,tanhl,asinl,acoshl,atanhl)
 
 #define ML_DEFINE_PRIMITIVE_REAL_FRACTION(A,T,ROUND,FLOOR,CEIL,TRUNCATE)\
 inline T mlRound##A(T x) {\

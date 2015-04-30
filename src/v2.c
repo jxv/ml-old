@@ -187,7 +187,11 @@ inline T mlDotV2##A(MLV2##A x, MLV2##A y) {\
 	return mlAdd##A(mlMul##A(x.x, y.x), mlMul##A(x.y, y.y));\
 }\
 inline MLV2##A mlNormalizeV2##A(MLV2##A x) {\
-	return mlDivV2##A##A(x, mlLenV2##A(x));\
+	T len = mlLenV2##A(x);\
+	if (mlGreaterThan##A(len, mlEpsilon##A())) {\
+		return mlDivV2##A##A(x, len);\
+	}\
+	return x;\
 }\
 inline MLV2##A mlReflectV2##A(MLV2##A x, MLV2##A y) {\
 	return mlSubV2##A(x, mlMulV2##A##A(y, mlMul##A(mlDotV2##A(x, y), mlPrimitive##A(2))));\

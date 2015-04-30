@@ -84,6 +84,7 @@ T mlPiMul2##A();\
 T mlTau##A();\
 T mlEuler##A();\
 T mlPhi##A();\
+T mlEpsilon##A();\
 T mlExp##A(T x);\
 T mlLog##A(T x);\
 T mlSqrt##A(T x);\
