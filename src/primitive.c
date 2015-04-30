@@ -7,12 +7,12 @@ inline T mlPrimitive##A(T x) {\
 	return x;\
 }
 
-ML_DECLARE_PRIMITIVE_NUMBER(b,bool)
-ML_DECLARE_PRIMITIVE_NUMBER(i,int)
-ML_DECLARE_PRIMITIVE_NUMBER(li,long int)
-ML_DECLARE_PRIMITIVE_NUMBER(f,float)
-ML_DECLARE_PRIMITIVE_NUMBER(d,double)
-ML_DECLARE_PRIMITIVE_NUMBER(ld,long double)
+ML_DEFINE_PRIMITIVE_CTOR(b,bool)
+ML_DEFINE_PRIMITIVE_CTOR(i,int)
+ML_DEFINE_PRIMITIVE_CTOR(li,long int)
+ML_DEFINE_PRIMITIVE_CTOR(f,float)
+ML_DEFINE_PRIMITIVE_CTOR(d,double)
+ML_DEFINE_PRIMITIVE_CTOR(ld,long double)
 
 #define ML_DEFINE_PRIMITIVE_NUMBER(A,T,ABS)\
 inline T mlAbs##A(T x) {\
@@ -305,7 +305,7 @@ ML_DEFINE_PRIMITIVE_INTERPOLATE(d,double)
 ML_DEFINE_PRIMITIVE_INTERPOLATE(ld,long double)
 
 #define ML_DEFINE_RAW_CAST(A,TA,B,TB)\
-inline TB mlRawCast##A##B(TA x) {\
+inline TB mlRawCast##A##To##B(TA x) {\
 	union {\
 		TA a;\
 		TB b;\
